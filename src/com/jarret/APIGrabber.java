@@ -1,53 +1,62 @@
-/*
-	 * Stolen from http://xml.nig.ac.jp/tutorial/rest/index.html
-	 * and http://www.dr-chuck.com/csev-blog/2007/09/calling-rest-web-services-from-java/
-*/
-
 package com.jarret;
 
 import java.io.*;
 import java.net.*;
-
-import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.*;
 
 public class APIGrabber {
 
-	private static String APIkey = "993e0cb5-7605-4660-956e-7b9846ec9467";
 
-	public void APIcall() throws IOException {
-		HttpsURLConnection c = null;
+
+
+	public String APIcall() throws IOException {
+		HttpsURLConnection connection = null;
 		URL url = new URL("https://api.coinmarketcap.com/v1/ticker/gridcoin/");
-		// String query = "id:GRC";
 
-		// make connection
-		// URLConnection urlc = url.openConnection();
-		c = (HttpsURLConnection) url.openConnection();
-		c.setRequestMethod("GET");
-		c.setRequestProperty("Content-length", "0");
-		c.setUseCaches(false);
-		c.setAllowUserInteraction(false);
-		c.setConnectTimeout(100);
-		c.setReadTimeout(500);
-		c.connect();
+		// make connection set properties
+		connection = (HttpsURLConnection) url.openConnection();
+		connection.setRequestMethod("GET");
+		connection.setRequestProperty("Content-length", "0");
+		connection.setUseCaches(false);
+		connection.setAllowUserInteraction(false);
+		connection.setConnectTimeout(100);
+		connection.setReadTimeout(500);
+		connection.connect();
 
-		System.out.println((c.getResponseCode()));
-		// urlc.setRequestProperty("Content-Type", "application/json");
+		// print response code
+		int responseCode = connection.getResponseCode();
+		if (responseCode == 200) {
+			// get result
+			BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String l = null;
+			String retString = null;
 
-		// urlc.getInputStream();
-		// send query
-		// PrintStream ps = new PrintStream(urlc.getOutputStream());
-		// ps.print(query);
-		// ps.close();
+			while ((l = br.readLine()) != null) {
+				if (l.contains("price_usd") == true) {
 
-		// get result
-		BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream()));
-		String l = null;
+					// String[] temp = new String[500];
 
-		while ((l = br.readLine()) != null) {
-			System.out.println(l);
+					String[] temp = l.split("\"");
+					
+					//int length = temp.length;
+					
+					//System.out.println(length);
+					/*
+					 * System.out.println(temp[3] + "first"); for (int i = 0; i < temp.length; i++)
+					 * { System.out.println(temp[i]); } ;
+					 * 
+					 * while (i <= 100) { System.out.println(temp[i]);
+					 * 
+					 * } ;
+					 */
+
+					retString = temp[3];
+				}
+			}
+			br.close();
+			return retString;
+		} else {
+			return "Someting is wrong";
 		}
-		br.close();
-		return;
-	};
-
-}
+	}
+};
