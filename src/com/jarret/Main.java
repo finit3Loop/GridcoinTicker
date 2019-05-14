@@ -18,15 +18,17 @@ public class Main {
 
 			Color color = new Color(0, 204, 204);
 
+			
 			JFrame ticker = new JFrame();
 			ticker.setTitle("GRC ticker");
 			ticker.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			ticker.setSize(400, 100);
-			ticker.setResizable(false);
+			ticker.setSize(200, 100);
+			ticker.setResizable(true);
 			ticker.add(CryptoQuote);
 			ticker.setVisible(true);
 			ticker.setBackground(Color.GREEN);
-
+			
+			
 			// System.out.println("call done");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
